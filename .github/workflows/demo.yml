@@ -39,7 +39,8 @@ jobs:
     steps:
      - name: Get build artifacts
        uses: actions/download-artifact@v3
-       with: dist-files # the same name as in line 31, it will download the zip file and unzip the file
+       with: 
+        name: dist-files # the same name as in line 31, it will download the zip file and unzip the file
      - name: Output contents
        run: ls
      - name: Deploy

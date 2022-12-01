@@ -28,14 +28,19 @@ jobs:
       - name: Upload artifacts # https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v3
         with: 
-          name: dist-files # The name that we save the file
-          path: | 
-            dist
-            package.json
-          #path: dist # Where to find the files that we want to store
+          name: dist-files # The name that we save the file, we can upload more then one file
+          # path: | 
+          #   dist
+          #   package.json
+          path: dist # Where to find the files that we want to store
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
-        run: echo "Deploying..."
+     - name: Get build artifacts
+       uses: actions/download-artifact@v3
+       with: dist-files # the same name as in line 31, it will download the zip file and unzip the file
+     - name: Output contents
+       run: ls
+     - name: Deploy
+       run: echo "Deploying..."

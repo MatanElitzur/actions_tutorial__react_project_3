@@ -9,6 +9,16 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm # for caching the Install dependencies
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }} #for retrieving the cache in the future
+          #hashFiles('**/package-lock.json') --> create a uniqu hash file from the file we gave it
+          #The hash value will change when the content of the file package-lock.json will change
+          # The ** at '**/package-lock.json' represent that the location of the file doesn't matter
+          # if the hash value is different github will delete the cache and then 'Install dependencies'
+          #step will run again and will create a new cach
       - name: Install dependencies
         run: npm ci
       - name: Lint code
@@ -23,6 +33,12 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies #It will use the same cache as in line 12 cause all the cashe is instore in a centeral cashe
+        uses: actions/cache@v3   # So also other jobs and workflows can use the same cache
+        with:
+          path: ~/.npm # for caching the Install dependencies
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }} #for retrieving the cache in the future
+
       - name: Install dependencies
         run: npm ci
       - name: Build website

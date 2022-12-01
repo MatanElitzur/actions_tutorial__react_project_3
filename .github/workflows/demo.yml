@@ -18,6 +18,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs: # Define any output the job will make
+      script-file: ${{ steps.publish.outputs.something }} #github context https://docs.github.com/en/actions/learn-github-actions/contexts
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -25,6 +27,9 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
+      - name: Publish JS filename # We want to publish the file name that it will be avilabe to other jobs.
+        run: find dist/assets/*.js -type f -execdir echo 'something={}' >> $GITHUB_OUTPUT';'
+        id: publish
       - name: Upload artifacts # https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v3
         with: 
@@ -43,5 +48,7 @@ jobs:
         name: dist-files # the same name as in line 31, it will download the zip file and unzip the file
      - name: Output contents
        run: ls
+     - name: Output filename
+       run: echo "${{ needs.build.outputs.script-file }}" #The needs is a github context object https://docs.github.com/en/actions/learn-github-actions/contexts
      - name: Deploy
        run: echo "Deploying..."

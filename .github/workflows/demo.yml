@@ -47,7 +47,7 @@ jobs:
         run: find dist/assets/*.js -type f -execdir echo 'something={}' >> $GITHUB_OUTPUT ';'
         id: publish
       - name: Upload artifacts # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3 #This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
         with: 
           name: dist-files # The name that we save the file, we can upload more then one file
           # path: | 
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Get build artifacts
-       uses: actions/download-artifact@v3
+       uses: actions/download-artifact@v3  #download artifact from previous step
        with: 
         name: dist-files # the same name as in line 31, it will download the zip file and unzip the file
      - name: Output contents
